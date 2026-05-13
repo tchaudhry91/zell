@@ -6,5 +6,5 @@ pub const Cell = packed struct {
     italic: bool, // 38 + 1 = 39 bits
     underline: bool, // 39 + 1 = 40 bits
     reverse: bool, // 40 + 1  = 41 bits
-    _padding: u23 = 0,
+    _padding: u23 = 0, // pad to 64 bits
 };
