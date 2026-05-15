@@ -8,3 +8,5 @@ pub const Cell = packed struct {
     reverse: bool, // 40 + 1  = 41 bits
     _padding: u23 = 0, // pad to 64 bits
 };
+
+pub const EMPTY: Cell = .{ .char = ' ' };
