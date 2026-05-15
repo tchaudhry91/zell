@@ -1,5 +1,6 @@
 const std = @import("std");
 const cell = @import("cell.zig");
+const csi = "0x1b]";
 
 pub const Grid = struct {
     width: usize,
@@ -37,6 +38,40 @@ pub fn put(self: *Grid, x: usize, y: usize, c: cell.Cell) !void {
     self.desired[self.calcOffset(x, y)] = c;
 }
 
-inline fn calcOffset(self: *Grid, x: usize, y: usize) usize {
+pub fn flush(self: *Grid, io: std.Io, writer: *std.Io.Writer) !void {
+    _ = io;
+    _ = writer;
+    // Diff against current
+    var diffs = try std.ArrayList(usize).initCapacity(self.allocator, (self.width * self.height));
+    defer diffs.deinit();
+
+    for (self.current, self.desired, 0..) |current, desired, i| {
+        if (current != desired) {
+            // This comparison is enough for packed structs
+            diffs.appendAssumeCapacity(i);
+        }
+    }
+    for (diffs) |c| {
+        getCharSequence(self.desired[c]);
+    }
+
+    @memcpy(self.current, self.desired);
+}
+
+fn getCharSequence(c: *cell.Cell) [64]u8 {
+    var buf: [64]u8 = undefined;
+    var cur = 0;
+    @memcpy(buf[cur..2], csi);
+    cur += 2;
+}
+
+inline fn calcOffsetFromCoordinates(self: *Grid, x: usize, y: usize) usize {
     return (x) + (y * self.width);
+}
+
+inline fn calcCoordinatesFromOffset(self: *Grid, offset: usize) struct { x: usize, y: usize } {
+    return .{
+        .x = offset % self.width,
+        .y = offset / self.width,
+    };
 }
