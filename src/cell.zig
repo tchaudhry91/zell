@@ -1,11 +1,11 @@
 pub const Cell = packed struct {
     char: u21, // 21 bits
-    fg: u8 = 7, // 21 + 8 = 29 bits
+    fg: u8 = 0, // 21 + 8 = 29 bits
     bg: u8 = 0, // 29 + 8 = 37 bits
-    bold: bool, // 37 + 1 = 38 bits
-    italic: bool, // 38 + 1 = 39 bits
-    underline: bool, // 39 + 1 = 40 bits
-    reverse: bool, // 40 + 1  = 41 bits
+    bold: bool = false, // 37 + 1 = 38 bits
+    italic: bool = false, // 38 + 1 = 39 bits
+    underline: bool = false, // 39 + 1 = 40 bits
+    reverse: bool = false, // 40 + 1  = 41 bits
     _padding: u23 = 0, // pad to 64 bits
 };
 
