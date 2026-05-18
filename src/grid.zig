@@ -36,11 +36,13 @@ pub const Grid = struct {
     pub fn start(self: *Grid) !void {
         try self.writer.print("{s}?1049h", .{csi});
         try self.writer.print("{s}?25l", .{csi});
+        try self.writer.flush();
     }
 
     pub fn stop(self: *Grid) !void {
-        try self.writer.print("{s}?1049l", .{csi});
         try self.writer.print("{s}?25h", .{csi});
+        try self.writer.print("{s}?1049l", .{csi});
+        try self.writer.flush();
     }
 
     pub fn put(self: *Grid, x: usize, y: usize, c: cell.Cell) !void {
