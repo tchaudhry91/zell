@@ -77,6 +77,10 @@ pub const Grid = struct {
         try self.writer.print("{s}2J", .{csi});
     }
 
+    pub fn clear(self: *Grid) void {
+        @memset(self.desired, cell.EMPTY);
+    }
+
     inline fn writeCharJumpSequence(writer: *std.Io.Writer, x: usize, y: usize) !void {
         try writer.print("{s}{d};{d}H", .{ csi, y + 1, x + 1 });
     }
@@ -95,10 +99,10 @@ pub const Grid = struct {
                 try writer.print(";{d}", .{attr.code});
             }
         }
-        if (c.fg != 0) {
+        if (c.fg != cell.COLOR_DEFAULT) {
             try writer.print(";38;5;{d}", .{c.fg});
         }
-        if (c.bg != 0) {
+        if (c.bg != cell.COLOR_DEFAULT) {
             try writer.print(";48;5;{d}", .{c.bg});
         }
         try writer.print("m{u}", .{c.char});
